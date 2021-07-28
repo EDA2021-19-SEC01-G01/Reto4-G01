@@ -25,12 +25,16 @@
  """
 
 
-import config as cf
+import config
+from DISClib.ADT.graph import gr
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import dijsktra as djk
+from DISClib.Utils import error as error
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
-assert cf
+assert config
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -38,13 +42,98 @@ los mismos.
 """
 
 # Construccion de modelos
+def newAnalyzer():
+    """ Inicializa el analizador
+
+   stops: Tabla de hash para guardar los vertices del grafo
+   connections: Grafo para representar las rutas entre países
+   components: Almacena la informacion de los componentes conectados
+   paths: Estructura que almancena los caminos de costo minimo desde un
+           vertice determinado a todos los otros vértices del grafo
+    """
+    try:
+        analyzer = {
+                    'landings': None,
+                    'connections': None,
+                    'components': None,
+                    'paths': None
+                    }
+
+        analyzer['landings'] = m.newMap(numelements=1280,
+                                     maptype='PROBING',
+                                     comparefunction=compareLandingIds)
+
+        analyzer['connections'] = gr.newGraph(datastructure='ADJ_LIST',
+                                              directed=True,
+                                              size=3263,
+                                              comparefunction=compareLandingIds)
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:newAnalyzer')
 
 # Funciones para agregar informacion al catalogo
+def addLandConnection(analyzer, lastland, land):
+    """
+    Adiciona las estaciones al grafo como vertices y arcos entre las
+    estaciones adyacentes.
+
+    Los vertices tienen por nombre el identificador de la estacion
+    seguido de la ruta que sirve. 
+    """
+    try:
+        origin = formatVertex(lastland)
+        destination = formatVertex(land)
+        cleanServiceDistance(lastland, land)
+        distance = float(land['Distance']) - float(land['Distance'])
+        distance = abs(distance)
+        addLand(analyzer, origin)
+        addLand(analyzer, destination)
+        addConnection(analyzer, origin, destination, distance)
+        addRouteStop(analyzer, land) #Completar
+        addRouteStop(analyzer, lastland)
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:addLandConnection')
+
+def addLand(analyzer, landid):
+    """
+    Adiciona una estación como un vertice del grafo
+    """
+    try:
+        if not gr.containsVertex(analyzer['connections'],landid):
+            gr.insertVertex(analyzer['connections'], landid)
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:addland')
+
+def addConnection(analyzer, origin, destination, distance):
+    """
+    Adiciona un arco entre dos estaciones
+    """
+    edge = gr.getEdge(analyzer['connections'], origin, destination)
+    if edge is None:
+        gr.addEdge(analyzer['connections'], origin, destination, distance)
+    return analyzer
+
+
 
 # Funciones para creacion de datos
 
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def compareLandingIds(landing, keyvalueland):
+    """
+    Compara dos estaciones
+    """
+    landcode = keyvalueland['key']
+    if (landing == landcode):
+        return 0
+    elif (landing > landcode):
+        return 1
+    else:
+        return -1
+
 
 # Funciones de ordenamiento
