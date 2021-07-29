@@ -59,7 +59,7 @@ def newAnalyzer():
                     'paths': None
                     }
 
-        analyzer['landings'] = mp.newMap(numelements=1280,
+        analyzer['landings'] = m.newMap(numelements=1280,
                                      maptype='PROBING',
                                      comparefunction=compareLandingIds)
 
@@ -72,7 +72,7 @@ def newAnalyzer():
         error.reraise(exp, 'model:newAnalyzer')
 
 # Funciones para agregar informacion al catalogo
-def addLandConnection(analyzer, lastland, land):
+def addLandConnection(analyzer,way):
     """
     Adiciona las estaciones al grafo como vertices y arcos entre las
     estaciones adyacentes.
@@ -81,15 +81,12 @@ def addLandConnection(analyzer, lastland, land):
     seguido de la ruta que sirve. 
     """
     try:
-        origin = formatVertex(lastland)
-        destination = formatVertex(land)
-        cleanServiceDistance(lastland, land)
-        distance = float(land['Distance']) - float(land['Distance'])
-        distance = abs(distance)
+        origin = way["origin"]
+        destination =way["destination"]
         addLand(analyzer, origin)
         addLand(analyzer, destination)
-        addConnection(analyzer, origin, destination, distance)
-        addRouteStop(analyzer, land) #Completar
+        addConnection(analyzer, origin, destination)
+        addRouteStop(analyzer, way) #Completar
         addRouteStop(analyzer, lastland)
         return analyzer
     except Exception as exp:
@@ -102,22 +99,20 @@ def addLand(analyzer, landid):
     try:
         if not gr.containsVertex(analyzer['connections'],landid):
             gr.insertVertex(analyzer['connections'], landid)
-    #    return analyzer
+        return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addland')
 
-def addConnection(analyzer, origin, destination, distance):
+def addConnection(analyzer, origin, destination):
     """
     Adiciona un arco entre dos estaciones
     """
     edge = gr.getEdge(analyzer['connections'], origin, destination)
     if edge is None:
-        gr.addEdge(analyzer['connections'], origin, destination, distance)
-    #return analyzer
+        gr.addEdge(analyzer['connections'], origin, destination)
+    return analyzer
 
-def addLanding(analyzer,line):
-    if mp.contains(analyzer['landings'],line['landing_point_id']) == False:
-        mp.put(analyzer['landings'],line['landing_point_id'],line)
+
 
 # Funciones para creacion de datos
 
