@@ -24,6 +24,8 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT import graph as gr
+from DISClib.ADT import map as mp
 assert cf
 
 
@@ -38,6 +40,7 @@ def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- ")
+    print("0- Salir")
 
 catalog = None
 
@@ -51,6 +54,9 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = controller.newAnalyzer()
         catalog = controller.loadData(catalog)
+        print (f"La cantidad de landing points es: {gr.numVertices(catalog['connections'])}")
+        print (f"La cantidad de conexiones entre landing points es: {gr.numEdges(catalog['connections'])}")
+        print (f"La cantidad de países es: {mp.size(catalog['countries'])}")
 
     elif int(inputs[0]) == 2:
         pass

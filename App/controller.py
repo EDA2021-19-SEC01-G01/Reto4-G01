@@ -23,6 +23,7 @@
 import config as cf
 import model
 import csv
+from DISClib.ADT import map as mp
 
 
 """
@@ -43,11 +44,19 @@ def loadData(catalog):
     landingsName = cf.data_dir + 'landing_points.csv'
     landingsFile = csv.DictReader(open(landingsName, encoding="utf-8"),
                                 delimiter=",")
+    counter = 0
     for line in landingsFile:
         model.addLanding(catalog,line)
+        if counter ==0:
+            print(f"La información del primer landing point es: {line}")
+        counter += 1
     for con in connectFile:
-        model.addLandConnection(catalog)
-
+        model.addLandConnection(catalog,con)
+    for pais in countriesFile:
+        lastName = pais['CountryName']
+        model.addCountry(catalog,pais)
+    lastCountryInfo = mp.get(catalog['countries'],lastName)['value']
+    print (f"Para el último país cargado, la población es {lastCountryInfo['Population']}, y los usuarios son {lastCountryInfo['Internet users']}")
     return catalog
 # Funciones de ordenamiento
 
