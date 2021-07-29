@@ -59,7 +59,7 @@ def newAnalyzer():
                     'paths': None
                     }
 
-        analyzer['landings'] = m.newMap(numelements=1280,
+        analyzer['landings'] = mp.newMap(numelements=1280,
                                      maptype='PROBING',
                                      comparefunction=compareLandingIds)
 
@@ -102,7 +102,7 @@ def addLand(analyzer, landid):
     try:
         if not gr.containsVertex(analyzer['connections'],landid):
             gr.insertVertex(analyzer['connections'], landid)
-        return analyzer
+    #    return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addland')
 
@@ -113,9 +113,11 @@ def addConnection(analyzer, origin, destination, distance):
     edge = gr.getEdge(analyzer['connections'], origin, destination)
     if edge is None:
         gr.addEdge(analyzer['connections'], origin, destination, distance)
-    return analyzer
+    #return analyzer
 
-
+def addLanding(analyzer,line):
+    if mp.contains(analyzer['landings'],line['landing_point_id']) == False:
+        mp.put(analyzer['landings'],line['landing_point_id'],line)
 
 # Funciones para creacion de datos
 
