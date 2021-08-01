@@ -64,6 +64,8 @@ def newAnalyzer():
         
     analyzer['countries'] = mp.newMap(numelements=237,maptype='PROBING',comparefunction=compareLandingIds)
 
+    analyzer['citiesByName'] = mp.newMap(numelements=1280,maptype='PROBING',comparefunction=compareLandingIds)
+
     return analyzer
 
 # Funciones para agregar informacion al catalogo
@@ -105,6 +107,8 @@ def addConnection(analyzer, origin, destination,distance):
 def addLanding(analyzer,line):
     if mp.contains(analyzer['landings'],line['landing_point_id']) == False:
         mp.put(analyzer['landings'],line['landing_point_id'],line)
+    if mp.contains(analyzer['citiesByName'],line['name']) == False:
+        mp.put(analyzer['citiesByName'],line['name'],line)
 
 def addCountry(analyzer,pais):
     mp.put(analyzer['countries'],pais['CountryName'],pais)
@@ -147,3 +151,12 @@ def compareLandingIds(landing, keyvalueland):
 
 
 # Funciones de ordenamiento
+
+def requerimiento2 (analyzer,pais1,pais2):
+    capital1 = mp.get(analyzer['countries'],pais1)['value']['CapitalName']
+    c1id = mp.get(analyzer['citiesByName'],f"{capital1}, {pais1}")['value']['landing_point_id']
+    capital2 = mp.get(analyzer['countries'],pais2)['value']['CapitalName']
+    c2id = mp.get(analyzer['citiesByName'],f"{capital2}, {pais2}")['value']['landing_point_id']
+    search = djk.Dijkstra(analyzer['connections'],c1id)
+    route = djk.pathTo(search,c2id)
+    return route

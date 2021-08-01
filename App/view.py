@@ -26,6 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 from DISClib.ADT import graph as gr
 from DISClib.ADT import map as mp
+from DISClib.ADT import stack
 assert cf
 
 
@@ -50,7 +51,7 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
+    if int(inputs) == 1:
         print("Cargando información de los archivos ....")
         catalog = controller.newAnalyzer()
         catalog = controller.loadData(catalog)
@@ -58,8 +59,19 @@ while True:
         print (f"La cantidad de conexiones entre landing points es: {gr.numEdges(catalog['connections'])}")
         print (f"La cantidad de países es: {mp.size(catalog['countries'])}")
 
-    elif int(inputs[0]) == 2:
+    elif int(inputs) == 2:
         pass
+
+    elif int(inputs) == 3:
+        pais1 = input("Ingrese el país 1: ")
+        pais2 = input("Ingrese el país 2: ")
+        rta = controller.requerimiento2(catalog,pais1,pais2)
+        totalDist = 0
+        while stack.isEmpty(rta) == False:
+            escala = stack.pop(rta)
+            print (f"{escala['vertexA']} -> {escala['vertexA']}. Distancia: {escala['weight']} km")
+            totalDist += escala['weight']
+        print (f"\nLa distancia total es de {totalDist} km")
 
     else:
         sys.exit(0)

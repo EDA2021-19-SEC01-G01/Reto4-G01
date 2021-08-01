@@ -61,3 +61,6 @@ def loadData(catalog):
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+def requerimiento2 (analyzer,pais1,pais2):
+    return model.requerimiento2(analyzer,pais1,pais2)
