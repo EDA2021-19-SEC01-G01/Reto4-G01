@@ -41,6 +41,7 @@ def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- Requerimiento 1")
+    print("3- Requerimiento 2")
     print("0- Salir")
 
 catalog = None
