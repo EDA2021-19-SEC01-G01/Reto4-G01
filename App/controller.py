@@ -61,3 +61,5 @@ def loadData(catalog):
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+def req1(landing1,landing2,analyzer):
+    return model.req1(landing1,landing2,analyzer)

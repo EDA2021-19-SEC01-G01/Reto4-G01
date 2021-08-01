@@ -31,6 +31,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
+from DISClib.Algorithms.Graphs import dfs 
 from DISClib.Utils import error as error
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
@@ -56,6 +57,7 @@ def newAnalyzer():
                 'landings': None,
                 'connections': None,
                 'countries': None,
+                "components": None
                 }
 
     analyzer['landings'] = mp.newMap(numelements=1280,maptype='PROBING',comparefunction=compareLandingIds)
@@ -63,7 +65,8 @@ def newAnalyzer():
     analyzer['connections'] = gr.newGraph(datastructure='ADJ_LIST',directed=True,size=3263,comparefunction=compareLandingIds)
         
     analyzer['countries'] = mp.newMap(numelements=237,maptype='PROBING',comparefunction=compareLandingIds)
-
+    
+    
     return analyzer
 
 # Funciones para agregar informacion al catalogo
@@ -133,6 +136,14 @@ def points2distance(start,  end):
     c = 2 * math.asin(math.sqrt(a))
     return 6371 * c
 
+def connectedComponents(analyzer):
+    """
+    Calcula los componentes conectados del grafo
+    Se utiliza el algoritmo de Kosaraju
+    """
+    analyzer['components'] = scc.KosarajuSCC(analyzer['connections'])
+    return scc.connectedComponents(analyzer['components'])
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def compareLandingIds(landing, keyvalueland):
@@ -146,4 +157,12 @@ def compareLandingIds(landing, keyvalueland):
         return 1
 
 
-# Funciones de ordenamiento
+# Funciones de requerimiento
+
+def req1 (landing1,landing2,analyzer):
+    
+    num_scc=connectedComponents(analyzer)
+    
+    print(analyzer["connections"])
+    print(num_scc)
+    return num_scc
