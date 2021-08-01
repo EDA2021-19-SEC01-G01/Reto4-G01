@@ -40,7 +40,7 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2- Requerimiento 1")
     print("0- Salir")
 
 catalog = None
@@ -59,8 +59,10 @@ while True:
         print (f"La cantidad de conexiones entre landing points es: {gr.numEdges(catalog['connections'])}")
         print (f"La cantidad de países es: {mp.size(catalog['countries'])}")
 
-    elif int(inputs) == 2:
-        pass
+    elif int(inputs[0]) == 2:
+         landing1=input("Ingrese el Landing Point 1: ")
+         landing2=input("Ingrese el Landing Point 2: ")
+         print(controller.req1(landing1,landing2,catalog))
 
     elif int(inputs) == 3:
         pais1 = input("Ingrese el país 1: ")

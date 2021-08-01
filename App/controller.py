@@ -64,3 +64,5 @@ def loadData(catalog):
 
 def requerimiento2 (analyzer,pais1,pais2):
     return model.requerimiento2(analyzer,pais1,pais2)
+def req1(landing1,landing2,analyzer):
+    return model.req1(landing1,landing2,analyzer)
