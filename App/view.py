@@ -42,6 +42,8 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- Requerimiento 1")
     print("3- Requerimiento 2")
+    print("4- Requerimiento 3")
+    print("5- Bono(Graficar)")
     print("0- Salir")
 
 catalog = None
@@ -60,10 +62,12 @@ while True:
         print (f"La cantidad de conexiones entre landing points es: {gr.numEdges(catalog['connections'])}")
         print (f"La cantidad de países es: {mp.size(catalog['countries'])}")
 
-    elif int(inputs[0]) == 2:
+    elif int(inputs) == 2:
          landing1=input("Ingrese el Landing Point 1: ")
          landing2=input("Ingrese el Landing Point 2: ")
-         print(controller.req1(landing1,landing2,catalog))
+         retorno = controller.req1(landing1,landing2,catalog)
+         print(f"La cantidad de componentes conectados es {retorno[0]}")
+         print(f"Los dos landing points están conectados: {retorno[1]}")
 
     elif int(inputs) == 3:
         pais1 = input("Ingrese el país 1: ")
@@ -72,9 +76,12 @@ while True:
         totalDist = 0
         while stack.isEmpty(rta) == False:
             escala = stack.pop(rta)
-            print (f"{escala['vertexA']} -> {escala['vertexA']}. Distancia: {escala['weight']} km")
+            print (f"{escala['vertexA']} -> {escala['vertexB']}. Distancia: {escala['weight']} km")
             totalDist += escala['weight']
         print (f"\nLa distancia total es de {totalDist} km")
+
+    elif int(inputs) == 4:
+        solution = controller.requerimiento3(catalog)
 
     else:
         sys.exit(0)

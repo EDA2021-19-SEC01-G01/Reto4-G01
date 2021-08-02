@@ -29,6 +29,8 @@ import config
 from DISClib.ADT.graph import gr
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.ADT import stack
+from DISClib.Algorithms.Graphs import prim
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Algorithms.Graphs import dfs 
@@ -147,7 +149,6 @@ def connectedComponents(analyzer):
     Se utiliza el algoritmo de Kosaraju
     """
     analyzer['components'] = scc.KosarajuSCC(analyzer['connections'])
-    return scc.connectedComponents(analyzer['components'])
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
@@ -176,8 +177,24 @@ def requerimiento2 (analyzer,pais1,pais2):
 
 def req1 (landing1,landing2,analyzer):
     
-    num_scc=connectedComponents(analyzer)
-    
-    print(analyzer["connections"])
-    print(num_scc)
-    return num_scc
+    num_scc= scc.connectedComponents(analyzer['components'])
+    areConnected = scc.stronglyConnected(analyzer['components'], landing1, landing2)
+    return num_scc,areConnected
+
+def requerimiento3 (analyzer):
+    primadoXd = prim.PrimMST(analyzer['connections'])
+    tabla = (analyzer['components']['idscc'])['table']['elements']
+    analyzer['eachSCC'] = mp.newMap(numelements=scc.connectedComponents(analyzer['components']),maptype='PROBING',loadfactor=0.5)
+    for vertex in tabla:
+        numero = vertex['value']
+        punto = vertex['key']
+        if mp.contains(analyzer['eachSCC'],numero)==False:
+            mp.put(analyzer['eachSCC'],numero,lt.newList("ARRAY_LIST"))
+        lt.addLast(mp.get(analyzer['eachSCC'],numero)['value'],punto)
+    kingOfSCC = None
+    sizeKOSCC = 0
+    for i in range(1,scc.connectedComponents(analyzer['components'])+1):
+        tamano = lt.size(mp.get(analyzer['eachSCC'],i)['value'])
+        if tamano > sizeKOSCC:
+            sizeKOSCC = tamano
+            kingOfSCC = i

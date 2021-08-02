@@ -56,6 +56,7 @@ def loadData(catalog):
         lastName = pais['CountryName']
         model.addCountry(catalog,pais)
     lastCountryInfo = mp.get(catalog['countries'],lastName)['value']
+    model.connectedComponents(catalog)
     print (f"Para el último país cargado, la población es {lastCountryInfo['Population']}, y los usuarios son {lastCountryInfo['Internet users']}")
     return catalog
 # Funciones de ordenamiento
@@ -66,3 +67,5 @@ def requerimiento2 (analyzer,pais1,pais2):
     return model.requerimiento2(analyzer,pais1,pais2)
 def req1(landing1,landing2,analyzer):
     return model.req1(landing1,landing2,analyzer)
+def requerimiento3 (analyzer):
+    return model.requerimiento3(analyzer)
