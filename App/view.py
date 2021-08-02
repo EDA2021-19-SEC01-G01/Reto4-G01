@@ -82,6 +82,8 @@ while True:
 
     elif int(inputs) == 4:
         solution = controller.requerimiento3(catalog)
+        print(f"La cantidad de vértices en el MST es: {solution[0]}")
+        print(f"La distancia total del MST es: {solution[1]}")
 
     else:
         sys.exit(0)

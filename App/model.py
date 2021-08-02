@@ -30,6 +30,7 @@ from DISClib.ADT.graph import gr
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.ADT import stack
+from DISClib.ADT import queue
 from DISClib.Algorithms.Graphs import prim
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
@@ -182,19 +183,19 @@ def req1 (landing1,landing2,analyzer):
     return num_scc,areConnected
 
 def requerimiento3 (analyzer):
+    #tabla = (analyzer['components']['idscc'])['table']['elements']
+    #analyzer['eachSCC'] = mp.newMap(numelements=scc.connectedComponents(analyzer['components']),maptype='PROBING',loadfactor=0.5)
+    #for vertex in tabla:
+    #    punto = vertex['key']
+    #    if vertex['key'] != None:
+    #        numero = vertex['value']
+    #        if mp.contains(analyzer['eachSCC'],numero)==False:
+    #            mp.put(analyzer['eachSCC'],numero,lt.newList("ARRAY_LIST"))
+    #        lt.addLast(mp.get(analyzer['eachSCC'],numero)['value'],punto)
     primadoXd = prim.PrimMST(analyzer['connections'])
-    tabla = (analyzer['components']['idscc'])['table']['elements']
-    analyzer['eachSCC'] = mp.newMap(numelements=scc.connectedComponents(analyzer['components']),maptype='PROBING',loadfactor=0.5)
-    for vertex in tabla:
-        numero = vertex['value']
-        punto = vertex['key']
-        if mp.contains(analyzer['eachSCC'],numero)==False:
-            mp.put(analyzer['eachSCC'],numero,lt.newList("ARRAY_LIST"))
-        lt.addLast(mp.get(analyzer['eachSCC'],numero)['value'],punto)
-    kingOfSCC = None
-    sizeKOSCC = 0
-    for i in range(1,scc.connectedComponents(analyzer['components'])+1):
-        tamano = lt.size(mp.get(analyzer['eachSCC'],i)['value'])
-        if tamano > sizeKOSCC:
-            sizeKOSCC = tamano
-            kingOfSCC = i
+    tamano = primadoXd['edgeTo']['size']
+    totalDist = 0
+    for cu in lt.iterator(mp.valueSet(primadoXd['edgeTo'])):
+        totalDist += cu['weight']
+    
+    return tamano, totalDist
